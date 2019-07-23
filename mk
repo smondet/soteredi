@@ -14,6 +14,22 @@ configure () {
             export ocaml_version="4.08"
             export paths="./$config"
             ;;
+        "T-407" )
+            say "Tezos-full+4.07 configuration"
+            export config="$config"
+            export apt_packages="m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap"
+            export opam_packages="dune "
+            export ocaml_version="4.07"
+            export paths="./$config"
+            export post=$(mktemp)
+            cat > $post <<EOF
+RUN opam pin add -n ocp-indent 1.6.1
+RUN opam pin add -n ipaddr 3.1.0
+RUN git clone https://gitlab.com/tezos/tezos.git
+WORKDIR tezos
+RUN opam config exec -- bash -c 'opam install num base fmt odoc ocamlformat.0.10 \$(find src vendors -name "*.opam" -print)'
+EOF
+            ;;
         "default" | "S-407" | * )
             say "Default configuration"
             export config="S-407"
@@ -42,6 +58,9 @@ RUN opam config exec -- opam update
 RUN opam config exec -- opam upgrade
 RUN opam config exec -- opam install $opam_packages
 EOF
+        if [ "$post" != "" ]; then
+            cat "$post" >> $path/Dockerfile
+        fi
     done
 }
 
@@ -50,7 +69,7 @@ build () {
 }
 
 all () {
-    for config in S-407 S-408 ; do
+    for config in S-407 S-408 T-407 ; do
         export config
         update
     done
