@@ -1,5 +1,5 @@
-# Generated for config: 'S-407'
-FROM ocaml/opam2:4.07
+# Generated for config: 'S-408'
+FROM ocaml/opam2:4.08
 RUN sudo apt-get update -qq
 RUN sudo apt-get upgrade -y
 RUN sudo apt-get install -y m4 pkg-config libgmp-dev build-essential
