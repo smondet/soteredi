@@ -8,3 +8,4 @@ RUN opam config exec -- opam remote add mothership https://github.com/ocaml/opam
 RUN opam config exec -- opam update
 RUN opam config exec -- opam upgrade
 RUN opam config exec -- opam install parsexp num js_of_ocaml dune base alcotest fmt ppx_show odoc ocamlformat.0.10
+WORKDIR /home/opam

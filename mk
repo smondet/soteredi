@@ -61,6 +61,7 @@ EOF
         if [ "$post" != "" ]; then
             cat "$post" >> $path/Dockerfile
         fi
+        echo "WORKDIR /home/opam" >> $path/Dockerfile
     done
 }
 
