@@ -6,6 +6,13 @@ say () {
 
 configure () {
     case "$1" in
+        "S-408" )
+            say "4.08 + default configuration"
+            export config="$config"
+            export apt_packages="m4 pkg-config libgmp-dev build-essential"
+            export opam_packages="parsexp num js_of_ocaml dune base alcotest fmt ppx_show odoc ocamlformat.0.10"
+            export ocaml_version="4.08"
+            ;;
         "default" | "S-407" | * )
             say "Default configuration"
             export config="S-407"
