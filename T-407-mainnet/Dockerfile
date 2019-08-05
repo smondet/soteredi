@@ -1,4 +1,4 @@
-# Generated for config: 'T-407'
+# Generated for config: 'T-407-mainnet'
 FROM ocaml/opam2:4.07
 RUN sudo apt-get update -qq
 RUN sudo apt-get upgrade -y
@@ -10,7 +10,7 @@ RUN opam config exec -- opam upgrade
 RUN opam config exec -- opam install dune 
 RUN opam pin add -n ocp-indent 1.6.1
 RUN opam pin add -n ipaddr 3.1.0
-RUN git clone https://gitlab.com/tezos/tezos.git -b master
+RUN git clone https://gitlab.com/tezos/tezos.git -b mainnet
 WORKDIR tezos
 RUN opam config exec -- bash -c 'opam install num base fmt odoc ocamlformat.0.10 $(find src vendors -name "*.opam" -print)'
 WORKDIR /home/opam
