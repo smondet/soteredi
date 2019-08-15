@@ -2,7 +2,7 @@
 FROM ocaml/opam2:4.07
 RUN sudo apt-get update -qq
 RUN sudo apt-get upgrade -y
-RUN sudo apt-get install -y m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap
+RUN sudo apt-get install -y net-tools m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap
 ENV OPAMYES 1
 RUN opam config exec -- opam remote add mothership https://github.com/ocaml/opam-repository.git
 RUN opam config exec -- opam update

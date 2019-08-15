@@ -9,7 +9,7 @@ full_tezos () {
     local config="$2"
     local extra_packages="$3"
     say "Tezos-full+4.07 @$branch configuration"
-    export apt_packages="m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap"
+    export apt_packages="net-tools m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap"
     export opam_packages="dune "
     export ocaml_version="4.07"
     export paths="./$config"
@@ -41,6 +41,8 @@ configure () {
             full_tezos "mainnet" "$config" ;;
         "ST-407-mainnet" )
             full_tezos "mainnet" "$config" "$s_opam_packages" ;;
+        "ST-407-master" )
+            full_tezos "master" "$config" "$s_opam_packages" ;;
         "default" | "S-407" | * )
             say "Default configuration"
             export config="S-407"
@@ -83,7 +85,7 @@ build () {
 }
 
 all () {
-    for config in S-407 S-408 T-407 T-407-mainnet ST-407-mainnet ; do
+    for config in S-407 S-408 T-407 T-407-mainnet ST-407-mainnet ST-407-master ; do
         export config
         update
     done

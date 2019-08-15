@@ -1,4 +1,4 @@
-# Generated for config: 'T-407-mainnet'
+# Generated for config: 'ST-407-master'
 FROM ocaml/opam2:4.07
 RUN sudo apt-get update -qq
 RUN sudo apt-get upgrade -y
@@ -10,8 +10,8 @@ RUN opam config exec -- opam upgrade
 RUN opam config exec -- opam install dune 
 RUN opam pin add -n ocp-indent 1.6.1
 RUN opam pin add -n ipaddr 3.1.0
-RUN git clone https://gitlab.com/tezos/tezos.git -b mainnet
+RUN git clone https://gitlab.com/tezos/tezos.git -b master
 WORKDIR tezos
 RUN opam config exec -- opam pin -n dune 1.10.0
-RUN opam config exec -- bash -c 'opam install --ignore-constraints-on=dune  num base fmt odoc ocamlformat.0.10 $(find src vendors -name "*.opam" -print)'
+RUN opam config exec -- bash -c 'opam install --ignore-constraints-on=dune parsexp num js_of_ocaml dune base alcotest fmt ppx_show odoc ocamlformat.0.10 num base fmt odoc ocamlformat.0.10 $(find src vendors -name "*.opam" -print)'
 WORKDIR /home/opam
