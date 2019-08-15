@@ -16,5 +16,6 @@ RUN opam config exec -- opam pin -n add dune 1.10.0
 RUN opam config exec -- bash -c 'opam install --ignore-constraints-on=dune  num base fmt odoc ocamlformat.0.10 $(find src vendors -name "*.opam" -print)'
 WORKDIR ..
 RUN git clone https://gitlab.com/smondet/flextesa.git -b master
-RUN opam config exec -- opam pin --ignore-constraints-on=dune add flextesa flextesa/
+RUN opam config exec -- opam pin -n add flextesa flextesa/
+RUN opam config exec -- opam install flextesa --ignore-constraints-on=dune
 WORKDIR /home/opam
