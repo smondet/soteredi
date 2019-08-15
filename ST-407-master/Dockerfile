@@ -12,6 +12,9 @@ RUN opam pin add -n ocp-indent 1.6.1
 RUN opam pin add -n ipaddr 3.1.0
 RUN git clone https://gitlab.com/tezos/tezos.git -b master
 WORKDIR tezos
-RUN opam config exec -- opam pin -n dune 1.10.0
+RUN opam config exec -- opam pin -n add dune 1.10.0
 RUN opam config exec -- bash -c 'opam install --ignore-constraints-on=dune parsexp num js_of_ocaml dune base alcotest fmt ppx_show odoc ocamlformat.0.10 num base fmt odoc ocamlformat.0.10 $(find src vendors -name "*.opam" -print)'
+WORKDIR ..
+RUN git clone https://gitlab.com/smondet/flextesa.git -b master
+RUN opam config exec -- opam pin --ignore-constraints-on=dune add flextesa flextesa/
 WORKDIR /home/opam

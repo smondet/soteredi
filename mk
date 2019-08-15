@@ -19,8 +19,11 @@ RUN opam pin add -n ocp-indent 1.6.1
 RUN opam pin add -n ipaddr 3.1.0
 RUN git clone https://gitlab.com/tezos/tezos.git -b $branch
 WORKDIR tezos
-RUN opam config exec -- opam pin -n dune 1.10.0
+RUN opam config exec -- opam pin -n add dune 1.10.0
 RUN opam config exec -- bash -c 'opam install --ignore-constraints-on=dune $extra_packages num base fmt odoc ocamlformat.0.10 \$(find src vendors -name "*.opam" -print)'
+WORKDIR ..
+RUN git clone https://gitlab.com/smondet/flextesa.git -b master
+RUN opam config exec -- opam pin --ignore-constraints-on=dune add flextesa flextesa/
 EOF
 }
 
@@ -40,7 +43,7 @@ configure () {
         "T-407-mainnet" )
             full_tezos "mainnet" "$config" ;;
         "ST-407-mainnet" )
-            full_tezos "mainnet" "$config" "$s_opam_packages" ;;
+            full_tezos "mainnet-staging" "$config" "$s_opam_packages" ;;
         "ST-407-master" )
             full_tezos "master" "$config" "$s_opam_packages" ;;
         "default" | "S-407" | * )
