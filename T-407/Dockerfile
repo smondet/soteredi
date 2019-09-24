@@ -2,7 +2,7 @@
 FROM ocaml/opam2:4.07
 RUN sudo apt-get update -qq
 RUN sudo apt-get upgrade -y
-RUN sudo apt-get install -y net-tools m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap
+RUN sudo apt-get install -y net-tools m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap 
 ENV OPAMYES 1
 RUN opam config exec -- opam remote add mothership https://github.com/ocaml/opam-repository.git
 RUN opam config exec -- opam update
@@ -12,10 +12,10 @@ RUN opam pin add -n ocp-indent 1.6.1
 RUN opam pin add -n ipaddr 3.1.0
 RUN git clone https://gitlab.com/tezos/tezos.git -b master
 WORKDIR tezos
-RUN opam config exec -- opam pin -n add dune 1.10.0
+ENV OPAMJOBS 2
 RUN opam config exec -- bash -c 'opam install --ignore-constraints-on=dune  num base fmt odoc ocamlformat.0.10 $(find src vendors -name "*.opam" -print)'
 WORKDIR ..
-RUN git clone https://gitlab.com/smondet/flextesa.git -b master
-RUN opam config exec -- opam pin -n add flextesa flextesa/
+RUN git clone https://gitlab.com/tezos/flextesa.git -b mainnet-compatible
+RUN opam config exec -- opam pin -n add flextesa flextesa/src/lib/
 RUN opam config exec -- opam install flextesa --ignore-constraints-on=dune
 WORKDIR /home/opam

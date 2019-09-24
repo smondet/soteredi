@@ -4,12 +4,15 @@ say () {
     echo "$*" >&2
 }
 
+export default_apt_packages="net-tools m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap"
+
 full_tezos () {
     local branch="$1"
     local config="$2"
-    local extra_packages="$3"
+    local extra_opam_packages="$3"
+    local extra_apt_packages="$4"
     say "Tezos-full+4.07 @$branch configuration"
-    export apt_packages="net-tools m4 pkg-config libhidapi-dev libev-dev libgmp-dev build-essential jq rlwrap"
+    export apt_packages="$default_apt_packages $extra_apt_packages"
     export opam_packages="dune "
     export ocaml_version="4.07"
     export paths="./$config"
@@ -19,22 +22,33 @@ RUN opam pin add -n ocp-indent 1.6.1
 RUN opam pin add -n ipaddr 3.1.0
 RUN git clone https://gitlab.com/tezos/tezos.git -b $branch
 WORKDIR tezos
+EOF
+    case "$branch" in
+        "mainnet-staging" | "mainnet" )
+            cat >> $post <<EOF
 RUN opam config exec -- opam pin -n add dune 1.10.0
-RUN opam config exec -- bash -c 'opam install --ignore-constraints-on=dune $extra_packages num base fmt odoc ocamlformat.0.10 \$(find src vendors -name "*.opam" -print)'
+RUN opam config exec -- opam pin -n add zarith 1.7
+EOF
+            ;;
+    esac
+    cat >> $post <<EOF
+ENV OPAMJOBS 2
+RUN opam config exec -- bash -c 'opam install --ignore-constraints-on=dune $extra_opam_packages num base fmt odoc ocamlformat.0.10 \$(find src vendors -name "*.opam" -print)'
 WORKDIR ..
-RUN git clone https://gitlab.com/smondet/flextesa.git -b master
-RUN opam config exec -- opam pin -n add flextesa flextesa/
+RUN git clone https://gitlab.com/tezos/flextesa.git -b mainnet-compatible
+RUN opam config exec -- opam pin -n add flextesa flextesa/src/lib/
 RUN opam config exec -- opam install flextesa --ignore-constraints-on=dune
 EOF
 }
 
-export s_opam_packages="parsexp num js_of_ocaml dune base alcotest fmt ppx_show odoc ocamlformat.0.10"
+export s_opam_packages="parsexp num js_of_ocaml dune base alcotest fmt ppx_show odoc ocamlformat.0.10  ppx_deriving gen_js_api js_of_ocaml-ppx"
+export s_apt_packages="parallel nodejs"
 configure () {
     case "$1" in
         "S-408" )
             say "Default+4.08 configuration"
             export config="$config"
-            export apt_packages="m4 pkg-config libgmp-dev build-essential"
+            export apt_packages="$default_apt_packages"
             export opam_packages="$s_opam_packages"
             export ocaml_version="4.08"
             export paths="./$config"
@@ -44,13 +58,13 @@ configure () {
         "T-407-mainnet" )
             full_tezos "mainnet" "$config" ;;
         "ST-407-mainnet" )
-            full_tezos "mainnet-staging" "$config" "$s_opam_packages" ;;
+            full_tezos "mainnet-staging" "$config" "$s_opam_packages" "$s_apt_packages" ;;
         "ST-407-master" )
-            full_tezos "master" "$config" "$s_opam_packages" ;;
+            full_tezos "master" "$config" "$s_opam_packages" "$s_apt_packages" ;;
         "default" | "S-407" | * )
             say "Default configuration"
             export config="S-407"
-            export apt_packages="m4 pkg-config libgmp-dev build-essential"
+            export apt_packages="$default_apt_packages $s_apt_packages"
             export opam_packages="$s_opam_packages"
             export ocaml_version="4.07"
             export paths="./$config ."
