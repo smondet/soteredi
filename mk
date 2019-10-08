@@ -17,9 +17,13 @@ full_tezos () {
     export ocaml_version="4.07"
     export paths="./$config"
     export post=$(mktemp)
+    local ipaddr_version="4.0.0"
+    if [ "branch" = "mainnet" ] ; then
+        ipaddr_version="3.1.0"
+    fi
     cat > $post <<EOF
 RUN opam pin add -n ocp-indent 1.6.1
-RUN opam pin add -n ipaddr 3.1.0
+RUN opam pin add -n ipaddr $ipaddr_version
 RUN git clone https://gitlab.com/tezos/tezos.git -b $branch
 WORKDIR tezos
 EOF

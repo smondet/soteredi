@@ -9,7 +9,7 @@ RUN opam config exec -- opam update
 RUN opam config exec -- opam upgrade
 RUN opam config exec -- opam install dune 
 RUN opam pin add -n ocp-indent 1.6.1
-RUN opam pin add -n ipaddr 3.1.0
+RUN opam pin add -n ipaddr 4.0.0
 RUN git clone https://gitlab.com/tezos/tezos.git -b master
 WORKDIR tezos
 ENV OPAMJOBS 2
